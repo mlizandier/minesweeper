@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://qbxsdat773m7"]
+
+[ext_resource type="Texture2D" uid="uid://c6w8lvs7mxya8" path="res://minesweeper.png" id="1_65i6o"]
+[ext_resource type="Script" uid="uid://bdlx4monwmik1" path="res://grid.gd" id="2_sle3t"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_65i6o"]
+texture = ExtResource("1_65i6o")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_sle3t"]
+sources/0 = SubResource("TileSetAtlasSource_65i6o")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bghhw"]
+texture = ExtResource("1_65i6o")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_fqc2p"]
+sources/0 = SubResource("TileSetAtlasSource_bghhw")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_sle3t"]
+texture = ExtResource("1_65i6o")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_bghhw"]
+sources/0 = SubResource("TileSetAtlasSource_sle3t")
+
+[node name="Main" type="Node2D" unique_id=1242535581]
+script = ExtResource("2_sle3t")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=2085031379]
+position = Vector2(66, 69)
+zoom = Vector2(2, 2)
+
+[node name="BottomLayer" type="TileMapLayer" parent="." unique_id=248959795]
+tile_set = SubResource("TileSet_sle3t")
+
+[node name="TopLayer" type="TileMapLayer" parent="." unique_id=372769526]
+tile_set = SubResource("TileSet_fqc2p")
+
+[node name="bottom" type="TileMapLayer" parent="." unique_id=721634623]
+tile_set = SubResource("TileSet_bghhw")
