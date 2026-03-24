@@ -1,17 +1,15 @@
 [gd_scene format=3 uid="uid://qbxsdat773m7"]
 
-[ext_resource type="Script" uid="uid://bqewir3w0s7v6" path="res://scripts/camera_2d.gd" id="2_bghhw"]
-[ext_resource type="Script" uid="uid://bdlx4monwmik1" path="res://scripts/grid.gd" id="2_sle3t"]
+[ext_resource type="Script" uid="uid://bdlx4monwmik1" path="res://grid.gd" id="2_sle3t"]
 [ext_resource type="TileSet" uid="uid://0pyc27x8iuwv" path="res://minesweeper_tileset.tres" id="3_sle3t"]
 
 [node name="Main" type="Node2D" unique_id=1242535581]
 script = ExtResource("2_sle3t")
-height = 20
-width = 20
+height = 9
+width = 9
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2085031379]
-zoom = Vector2(1.5, 1.5)
-script = ExtResource("2_bghhw")
+zoom = Vector2(2, 2)
 
 [node name="BottomLayer" type="TileMapLayer" parent="." unique_id=248959795]
 tile_set = ExtResource("3_sle3t")

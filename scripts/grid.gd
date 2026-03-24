@@ -29,31 +29,39 @@ const NEIGHBOURS = [
 # ---- VARS ----
 @onready var bottom_layer := $BottomLayer
 @onready var top_layer := $TopLayer
+@onready var tiles_amount = height * width
+@onready var mines_amount = int((tiles_amount) * randf_range(0.15, 0.19))
+
 var revealed_cells: Dictionary = {}
 var flagged_cells: Dictionary = {}
 var board: Array[Vector2i]
+var is_first_click = true
 
 func _ready() -> void:
-	var tiles_amount = height * width
-	var mines_amount = int((tiles_amount) * randf_range(0.15, 0.19))
-	setup_board(tiles_amount, mines_amount)
-	paint_board()
-	var center_tile = Vector2i(height / 2, width / 2)
-	$Camera2D.position = bottom_layer.map_to_local(center_tile)
+	init_board()
+	place_camera()
 
-func setup_board(tiles_amount: int, mines_amount: int) -> void:
+func place_camera() -> void:
+	var center_tile = Vector2i(floor(height / 2), floor(width / 2))
+	$Camera2D.position = bottom_layer.map_to_local(center_tile)
+	$Camera2D.setup_bounds(height, width, bottom_layer)
+
+func init_board():
 	board.resize(tiles_amount)
 	board.fill(EMPTY_TILE_COORD)
+	for i in width:
+		for j in height:
+			top_layer.set_cell(Vector2i(i, j), 0, HIDDEN_TILE_COORD)
 
-	var indices: Array[int] = []
-	for i in tiles_amount:
-		indices.append(i)
-	indices.shuffle()
-	
+func setup_board(safe_zone: Dictionary) -> void:
+	var indices: Array[int] = fill_and_shuffle(tiles_amount, safe_zone)
 	for i in mines_amount:
 		board[indices[i]] = BOMB_TILE_COORD
-	
-	for i in height:
+	count_neighbouring_bombs()
+	paint_board()
+
+func count_neighbouring_bombs():
+	for i in width:
 		for j in height:
 			if board[i * width + j] == BOMB_TILE_COORD:
 				continue
@@ -69,7 +77,7 @@ func setup_board(tiles_amount: int, mines_amount: int) -> void:
 				board[i* width +j] = TILE_MAP[bombs_around]
 
 func paint_board() -> void:
-	for i in height:
+	for i in width:
 		for j in width:
 			var index = i * width + j
 			bottom_layer.set_cell(Vector2i(i, j), 0, board[index])
@@ -80,6 +88,10 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("right_click"):
 		place_flag()
 	if event.is_action_pressed("left_click"):
+		if is_first_click:
+			is_first_click = false
+			var safe_zone := get_safe_zone(get_local_position())
+			setup_board(safe_zone)
 		reveal_block()
 
 func get_local_position() -> Vector2i:
@@ -117,3 +129,28 @@ func reveal_empty_neighbours(cell_coord: Vector2i) -> void:
 		revealed_cells[tile_coordinates] = true
 		if board[neighbour_x * width + neighbour_y] == EMPTY_TILE_COORD:
 			reveal_empty_neighbours(tile_coordinates)
+
+func get_safe_zone(cell_coord: Vector2i) -> Dictionary:
+	var safe_zone: Dictionary = {
+		coord_to_index(cell_coord): true
+	}
+	for neighbour in NEIGHBOURS:
+		var neighbour_x = cell_coord.x + neighbour.x
+		var neighbour_y = cell_coord.y + neighbour.y
+		var tile_coordinates = Vector2i(neighbour_x, neighbour_y)
+		if neighbour_x < 0 or neighbour_x >= height or neighbour_y < 0 or neighbour_y >= width:
+			continue
+		safe_zone[coord_to_index(tile_coordinates)] = true
+	return safe_zone
+
+func coord_to_index(coord: Vector2i):
+	return coord.x * width + coord.y
+	
+func fill_and_shuffle(amount: int, safe_zone: Dictionary) -> Array[int]:
+	var indices: Array[int] = []
+	for i in amount:
+		if safe_zone.has(i):
+			continue
+		indices.append(i)
+	indices.shuffle()
+	return indices
