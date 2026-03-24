@@ -38,6 +38,8 @@ func _ready() -> void:
 	var mines_amount = int((tiles_amount) * randf_range(0.15, 0.19))
 	setup_board(tiles_amount, mines_amount)
 	paint_board()
+	var center_tile = Vector2i(height / 2, width / 2)
+	$Camera2D.position = bottom_layer.map_to_local(center_tile)
 
 func setup_board(tiles_amount: int, mines_amount: int) -> void:
 	board.resize(tiles_amount)
@@ -109,7 +111,7 @@ func reveal_empty_neighbours(cell_coord: Vector2i) -> void:
 		var tile_coordinates = Vector2i(neighbour_x, neighbour_y)
 		if neighbour_x < 0 or neighbour_x >= height or neighbour_y < 0 or neighbour_y >= width:
 			continue
-		if revealed_cells.has(tile_coordinates):
+		if revealed_cells.has(tile_coordinates) or flagged_cells.has(tile_coordinates):
 			continue
 		top_layer.erase_cell(Vector2i(neighbour_x, neighbour_y))
 		revealed_cells[tile_coordinates] = true

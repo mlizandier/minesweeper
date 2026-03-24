@@ -9,6 +9,8 @@ height = 9
 width = 9
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=2085031379]
+position = Vector2(66, 69)
+anchor_mode = 0
 zoom = Vector2(2, 2)
 
 [node name="BottomLayer" type="TileMapLayer" parent="." unique_id=248959795]
